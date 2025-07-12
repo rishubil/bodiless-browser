@@ -1,0 +1,7 @@
+{
+    "name": "bodiless-browser-devcontainer",
+    "dockerComposeFile": "docker-compose.yml",
+    "service": "app",
+    "workspaceFolder": "/project",
+    "remoteUser": "1000" // uid of the user in the container, typically a non-root user
+}

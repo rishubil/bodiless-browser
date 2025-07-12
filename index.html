@@ -1,0 +1,275 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>😵 Bodiless Browser</title>
+    <!-- Google Fonts for CJK support with emoji compatibility -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans:wght@300;400;500;600;700&family=Noto+Sans+SC:wght@300;400;500;600;700&family=Noto+Sans+TC:wght@300;400;500;600;700&family=Noto+Sans+JP:wght@300;400;500;600;700&family=Noto+Sans+KR:wght@300;400;500;600;700&family=Noto+Sans+Mono:wght@400;500;600&family=Noto+Color+Emoji&family=Noto+Emoji&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            /* CJK text handling */
+            word-break: keep-all;
+            overflow-wrap: break-word;
+            line-break: auto;
+            text-align-last: left;
+        }
+
+        html {
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+            text-rendering: optimizeLegibility;
+            font-feature-settings: "kern" 1;
+            -webkit-font-feature-settings: "kern" 1;
+            -moz-font-feature-settings: "kern" 1;
+            /* CJK text rendering improvements */
+            font-variant-ligatures: normal;
+            font-variant-east-asian: normal;
+        }
+
+        body {
+            font-family: 'Noto Sans', 'Noto Sans KR', 'Noto Sans CJK KR', 'Noto Sans CJK SC', 'Noto Sans CJK TC', 'Noto Sans CJK JP', 'Apple SD Gothic Neo', 'Malgun Gothic', 'Microsoft YaHei', 'PingFang SC', 'Hiragino Sans GB', 'Source Han Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Yu Gothic UI', 'Helvetica Neue', Helvetica, Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Noto Color Emoji', 'Noto Emoji';
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            font-variant-emoji: unicode;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 2rem;
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 3rem;
+        }
+
+        .header h1 {
+            font-size: 3rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+
+        .header p {
+            font-size: 1.2rem;
+            opacity: 0.9;
+            margin-bottom: 2rem;
+        }
+
+        .url-form {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .input-group {
+            display: flex;
+            gap: 1rem;
+        }
+
+        .url-input {
+            flex: 1;
+            padding: 1rem 1.5rem;
+            font-size: 1rem;
+            font-family: inherit;
+            border: none;
+            border-radius: 50px;
+            background: rgba(255, 255, 255, 0.9);
+            color: #333;
+            outline: none;
+            transition: all 0.3s ease;
+        }
+
+        .url-input:focus {
+            transform: scale(1.02);
+            box-shadow: 0 8px 25px rgba(0,0,0,0.2);
+        }
+
+        .check-btn {
+            padding: 1rem 2rem;
+            font-size: 1rem;
+            font-weight: 600;
+            font-family: inherit;
+            border: none;
+            border-radius: 50px;
+            background: #ff6b6b;
+            color: white;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            min-width: 120px;
+            text-align: center;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .check-btn:hover {
+            background: #ff5252;
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(255, 107, 107, 0.4);
+        }
+
+        .check-btn:active {
+            transform: translateY(0);
+        }
+
+        .check-btn:disabled {
+            background: #ccc;
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: none;
+        }
+
+        .result {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 2rem;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            display: none;
+        }
+
+        .result.show {
+            display: block;
+            animation: slideUp 0.5s ease;
+        }
+
+        @keyframes slideUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .result-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0.8rem 0;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .result-item:last-child {
+            border-bottom: none;
+        }
+
+        .result-label {
+            font-weight: 600;
+            opacity: 0.8;
+        }
+
+        .result-value {
+            font-family: 'Noto Sans Mono', 'D2Coding', 'Source Code Pro', 'Monaco', 'Menlo', 'Consolas', 'Liberation Mono', 'Courier New', monospace, 'Apple Color Emoji', 'Segoe UI Emoji', 'Noto Color Emoji', 'Noto Emoji';
+            font-weight: 500;
+        }
+
+        .status-ok { color: #4ade80; }
+        .status-error { color: #f87171; }
+        .status-warning { color: #facc15; }
+
+        .loading {
+            text-align: center;
+            padding: 2rem;
+        }
+
+        .spinner {
+            width: 40px;
+            height: 40px;
+            border: 4px solid rgba(255, 255, 255, 0.3);
+            border-left: 4px solid white;
+            border-radius: 50%;
+            margin: 0 auto 1rem;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        .error {
+            background: rgba(248, 113, 113, 0.2);
+            border: 1px solid rgba(248, 113, 113, 0.5);
+            color: #fecaca;
+            padding: 1rem;
+            border-radius: 10px;
+            margin-top: 1rem;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>😵 Bodiless Browser</h1>
+            <p>If there's a Headless Browser, shouldn't someone make a Bodiless Browser too?</p>
+        </div>
+
+        <div class="url-form">
+            <div class="input-group">
+                <input 
+                    type="url" 
+                    class="url-input" 
+                    id="urlInput" 
+                    placeholder="https://example.com"
+                    required
+                >
+                <button class="check-btn" id="checkBtn" onclick="checkUrl()">
+                    Go
+                </button>
+            </div>
+        </div>
+
+        <div class="result" id="result">
+            <div id="loading" class="loading" style="display: none;">
+                <div class="spinner"></div>
+                <p>Checking page...</p>
+            </div>
+            
+            <div id="resultContent" style="display: none;">
+                <div class="result-item">
+                    <span class="result-label">HTTP Status</span>
+                    <span class="result-value" id="statusCode">-</span>
+                </div>
+                <div class="result-item">
+                    <span class="result-label">Page Title</span>
+                    <span class="result-value" id="pageTitle">-</span>
+                </div>
+                <div class="result-item">
+                    <span class="result-label">Response Time</span>
+                    <span class="result-value" id="responseTime">-</span>
+                </div>
+                <div class="result-item">
+                    <span class="result-label">Content Size</span>
+                    <span class="result-value" id="contentSize">-</span>
+                </div>
+            </div>
+
+            <div id="errorContent" class="error" style="display: none;">
+                <p id="errorMessage">An error occurred.</p>
+            </div>
+        </div>
+    </div>
+
+    <script type="module" src="/src/main.js"></script>
+</body>
+</html>
