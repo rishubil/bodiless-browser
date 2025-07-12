@@ -15,6 +15,10 @@ When you enter a URL, it shows you:
 
 No rendering. No JavaScript execution. No complex features.
 
+## 📸 Screenshot
+
+![Bodiless Browser Screenshot](screenshot.png)
+
 ## 🚀 Why did you make this?
 
 I was bored.
