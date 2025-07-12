@@ -25,9 +25,9 @@ I was bored.
 
 ## 📦 Installation
 
-### Method 1: Download executable
+### Method 1: Download installer
 
-Just download and run. No installation required.
+Just download and run the installer from the [releases page](https://github.com/rishubil/bodiless-browser/releases).
 
 ### Method 2: Build from source
 
